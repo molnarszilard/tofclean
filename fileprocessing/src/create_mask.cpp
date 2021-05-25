@@ -30,12 +30,13 @@ int main(int argc, char **argv)
     Point minLoc;
     Point maxLoc;
     int counter = 0;
+    float th = 100;
     minMaxLoc(mat_depth, &minVal, &maxVal, &minLoc, &maxLoc);
     for (int x = 0; x < mat_depth.rows; x++)
     {
         for (int y = 0; y < mat_depth.cols; y++)
         {
-            if (mat_depth.at<uint16_t>(x, y) >= maxVal*multiplier) // set threshold
+            if (mat_depth.at<uint16_t>(x, y) >= th) // set threshold
             {
                 counter++;
                 output.at<uint8_t>(x, y) = 255;
