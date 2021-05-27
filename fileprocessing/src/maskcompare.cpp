@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     sprintf(file_out, "%s%s", outdir.c_str(), gtfilename.c_str());
 
     cv::Mat gt = cv::imread(file_gt, cv::IMREAD_GRAYSCALE);
+    // cv::resize(gt, gt, cv::Size(), 0.125, 0.125);
     cv::Mat pred = cv::imread(file_pred, cv::IMREAD_GRAYSCALE);
     cv::Mat output = cv::Mat::zeros(gt.rows, gt.cols, CV_8UC3);
 
@@ -50,7 +51,7 @@ int main(int argc, char **argv)
             {
                 if (d > 0 && m == 0)
                 {
-                    output.at<cv::Vec3b>(i, j)[1] = 255;
+                    output.at<cv::Vec3b>(i, j)[0] = 255;
                 }
                 else
                 {

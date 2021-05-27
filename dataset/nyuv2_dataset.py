@@ -13,18 +13,18 @@ import cv2
 
     
 class NYUv2Dataset(data.Dataset):
-    def __init__(self, root='./dataset/', seed=None, train=True):
-    # def __init__(self, root='/media/rambo/ssd2/Szilard/nyu_v2_filter/dataset_plane/', seed=None, train=True):
+    # def __init__(self, root='./dataset/', seed=None, train=True):
+    def __init__(self, root='./dataset_anime/', seed=None, train=True):
         
         np.random.seed(seed)
         self.root = Path(root)
         self.train = train
         if train:
-            self.rgb_paths = [root+'gt/train/'+d for d in os.listdir(root+'gt/train/')]
+            self.rgb_paths = [root+'gt/'+d for d in os.listdir(root+'gt/')]
             # Randomly choose 50k images without replacement
             # self.rgb_paths = np.random.choice(self.rgb_paths, 500, False)
         else:
-            self.rgb_paths = [root+'noisy/test/'+d for d in os.listdir(root+'noisy/test/')]
+            self.rgb_paths = [root+'noisy/'+d for d in os.listdir(root+'noisy/')]
             # self.rgb_paths = np.random.choice(self.rgb_paths, 100, False)
         
 
@@ -51,6 +51,10 @@ class NYUv2Dataset(data.Dataset):
             print(path)
 
         depth_input = cv2.imread(path,cv2.IMREAD_UNCHANGED).astype(np.float32)
+        if depth_input.shape[2] != 3:
+            print("image path")
+            print(path)
+            print(depth_input.shape[2])
         if len(depth_input.shape) < 3:
             # print("Got 1 channel depth images, creating 3 channel depth images")
             combine_depth = np.empty((depth_input.shape[0],depth_input.shape[1], 3))
@@ -60,7 +64,8 @@ class NYUv2Dataset(data.Dataset):
             depth_input = combine_depth
         depthgt = cv2.imread(path.replace('noisy', 'gt'),cv2.IMREAD_UNCHANGED ).astype(np.float32)
         depth_input_mod = np.moveaxis(depth_input,-1,0)
-        depthgt2=np.expand_dims(depthgt, axis=0)
+        depthgt2 = np.moveaxis(depthgt,-1,0)
+        # depthgt2=np.expand_dims(depthgt, axis=0)
         # max_depth=10000.0/
         # print(np.max(depth_input_mod))
         return depth_input_mod/np.max(depth_input_mod), depthgt2/np.max(depth_input_mod)

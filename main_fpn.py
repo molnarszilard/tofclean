@@ -239,9 +239,11 @@ if __name__ == '__main__':
             data = train_data_iter.next()
             
             img.resize_(data[0].size()).copy_(data[0])
+            
+            # img = F.interpolate(img, size=(64,64), mode='nearest')
             z.resize_(data[1].size()).copy_(data[1])
+            # z = F.interpolate(z, size=(64,64), mode='nearest')
             optimizer.zero_grad()
-          
             z_fake = dfilt(img)
 
             loss=criterion(z_fake,z)
@@ -287,7 +289,9 @@ if __name__ == '__main__':
                 print(i,'/',len(eval_data_iter)-1)
 
                 img.resize_(data[0].size()).copy_(data[0])
+                # img = F.interpolate(img, size=(64,64), mode='nearest')
                 z.resize_(data[1].size()).copy_(data[1])
+                # z = F.interpolate(z, size=(64,64), mode='nearest')
                 
                 z_fake = dfilt(img)
 
