@@ -43,8 +43,8 @@ class Autoencoder(nn.Module):
         x = F.relu(self.dec4(x))
         x = self.upsample(x)
         x = F.interpolate(x, size=(x0.shape[2],x0.shape[3]), mode='nearest')
-        # x = self.out(x)
-        x = F.sigmoid(self.out(x))
+        x = self.out(x)
+        # x = F.sigmoid(self.out(x))
         return x
 net = Autoencoder()
 # print(net)
