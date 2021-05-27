@@ -31,10 +31,10 @@ def parse_args():
                       default=1, type=int)  
     parser.add_argument('--input_image_path', dest='input_image_path',
                       help='path to a single input image for evaluation',
-                      default='./dataset_anime/noisy/', type=str)
+                      default='./dataset/evaluation/depth3/', type=str)
     parser.add_argument('--output_output_path', dest='output_image_path',
                       help='path to a single input image for evaluation',
-                      default='./dataset_anime/preds/', type=str)
+                      default='./dataset/evaluation/depth_pred/', type=str)
                     #   default='/media/rambo/ssd2/Szilard/pico_tofnest/4bag_unfiltered/depth3/', type=str)
     parser.add_argument('--eval_folder', dest='eval_folder',
                       help='evaluate only one image or the whole folder',
@@ -125,8 +125,8 @@ if __name__ == '__main__':
                     time_sum=time_sum+stop-start
                     counter=counter+1
                     # npimage=(z_fake[0]*255).squeeze(0).cpu().detach().numpy().astype(np.uint8)
-                    npimage=(z_fake[0]/z_fake.max()*255).squeeze(0).cpu().detach().numpy().astype(np.uint8)
-                    npimage= np.moveaxis(npimage,0,-1)
+                    npimage=(z_fake[0]*m_depth).squeeze(0).cpu().detach().numpy().astype(np.uint16)
+                    # npimage= np.moveaxis(npimage,0,-1)
                     cv2.imwrite(outpath, npimage)
 
                 else:

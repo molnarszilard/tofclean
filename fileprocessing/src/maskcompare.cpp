@@ -30,7 +30,7 @@ int main(int argc, char **argv)
     sprintf(file_out, "%s%s", outdir.c_str(), gtfilename.c_str());
 
     cv::Mat gt = cv::imread(file_gt, cv::IMREAD_GRAYSCALE);
-    // cv::resize(gt, gt, cv::Size(), 0.125, 0.125);
+    // cv::resize(gt, gt, cv::Size(), 0.25, 0.25);
     cv::Mat pred = cv::imread(file_pred, cv::IMREAD_GRAYSCALE);
     cv::Mat output = cv::Mat::zeros(gt.rows, gt.cols, CV_8UC3);
 

@@ -1,3 +1,5 @@
+# %%
+# %%
 # from dataset.dataloader import DepthDataset
 from collections import Counter
 from dataset.nyuv2_dataset import NYUv2Dataset
@@ -240,9 +242,9 @@ if __name__ == '__main__':
             
             img.resize_(data[0].size()).copy_(data[0])
             
-            # img = F.interpolate(img, size=(64,64), mode='nearest')
+            # img = F.interpolate(img, size=(120,160), mode='nearest')
             z.resize_(data[1].size()).copy_(data[1])
-            # z = F.interpolate(z, size=(64,64), mode='nearest')
+            # z = F.interpolate(z, size=(120,160), mode='nearest')
             optimizer.zero_grad()
             z_fake = dfilt(img)
 
@@ -289,9 +291,9 @@ if __name__ == '__main__':
                 print(i,'/',len(eval_data_iter)-1)
 
                 img.resize_(data[0].size()).copy_(data[0])
-                # img = F.interpolate(img, size=(64,64), mode='nearest')
+                # img = F.interpolate(img, size=(120,160), mode='nearest')
                 z.resize_(data[1].size()).copy_(data[1])
-                # z = F.interpolate(z, size=(64,64), mode='nearest')
+                # z = F.interpolate(z, size=(120,160), mode='nearest')
                 
                 z_fake = dfilt(img)
 
