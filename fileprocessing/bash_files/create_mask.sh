@@ -1,7 +1,7 @@
 #!bin/bash
 builddir=$PWD'/../build/'
-ddir=$PWD'/../../dataset/evaluation/depth/'
-mdir=$PWD'/../../dataset/evaluation/mask/'
+ddir=$PWD'/../../dataset/evaluation/depthgt/'
+mdir=$PWD'/../../dataset/evaluation/maskgt/'
 
 if [[ ! -z "$1" ]] 
 then 
@@ -16,5 +16,5 @@ cd $ddir
 for filename in *.png; do
     cd $builddir
     # depth directory, mask directory, filename
-    ./create_mask $ddir $mdir $filename 0.5
+    ./create_mask $ddir $mdir $filename 0.05
 done

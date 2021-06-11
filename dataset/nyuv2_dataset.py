@@ -1,17 +1,16 @@
-import torch.utils.data as data
-import numpy as np
-from PIL import Image
+# from PIL import Image
+# from scipy import misc
 # from scipy.misc import imread
+# from torchvision.transforms import Resize, Compose, ToPILImage, ToTensor, RandomHorizontalFlip, CenterCrop, ColorJitter
+# import scipy.ndimage as ndimage
+# import torch.nn.functional as F
 from path import Path
-from torchvision.transforms import Resize, Compose, ToPILImage, ToTensor, RandomHorizontalFlip, CenterCrop, ColorJitter
-import torch, time, os
-import torch.nn.functional as F
-import random
-import scipy.ndimage as ndimage
-from scipy import misc
 import cv2
+import numpy as np
+import random
+import torch, time, os
+import torch.utils.data as data
 
-    
 class NYUv2Dataset(data.Dataset):
     def __init__(self, root='./dataset/', seed=None, train=True):
     # def __init__(self, root='./dataset_anime/', seed=None, train=True):
@@ -20,7 +19,7 @@ class NYUv2Dataset(data.Dataset):
         self.root = Path(root)
         self.train = train
         if train:
-            self.rgb_paths = [root+'gt/train/'+d for d in os.listdir(root+'gt/train/')]
+            self.rgb_paths = [root+'noisy/train/'+d for d in os.listdir(root+'noisy/train/')]
             # Randomly choose 50k images without replacement
             # self.rgb_paths = np.random.choice(self.rgb_paths, 500, False)
         else:
@@ -62,7 +61,8 @@ class NYUv2Dataset(data.Dataset):
             combine_depth[:,:,1] = depth_input
             combine_depth[:,:,2] = depth_input
             depth_input = combine_depth
-        depthgt = cv2.imread(path.replace('noisy', 'gt'),cv2.IMREAD_UNCHANGED ).astype(np.float32)
+        # depthgt = cv2.imread(path.replace('noisy', 'gt'),cv2.IMREAD_UNCHANGED ).astype(np.float32)
+        depthgt = cv2.imread(path,cv2.IMREAD_UNCHANGED ).astype(np.float32)
         depth_input_mod = np.moveaxis(depth_input,-1,0)
         # depthgt2 = np.moveaxis(depthgt,-1,0)
         depthgt2=np.expand_dims(depthgt, axis=0)

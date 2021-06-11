@@ -77,7 +77,7 @@ def parse_args():
                       default=0.1, type=float)
     parser.add_argument('--lt', dest='losst',
                       help='losstype: DDD, ownBCE, BCE, BCElogits, maskloss, pwloss',
-                      default="mse", type=str)
+                      default="DDD", type=str)
 
 
 # set training session
@@ -137,6 +137,8 @@ if __name__ == '__main__':
         criterion = PixelWiseOutlierLoss()
     if args.losst is 'mse':
         criterion = nn.MSELoss()
+    if args.losst is 'l1':
+        criterion = nn.L1Loss()
 
     if torch.cuda.is_available() and not args.cuda:
         print("WARNING: You might want to run with --cuda")
@@ -249,7 +251,7 @@ if __name__ == '__main__':
             z_fake = dfilt(img)
 
             loss=criterion(z_fake,z)
-            
+            # print(loss)
             loss.backward()
             optimizer.step()
             train_loss += loss.item()

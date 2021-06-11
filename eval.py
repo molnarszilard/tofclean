@@ -85,7 +85,7 @@ if __name__ == '__main__':
     del checkpoint
     torch.cuda.empty_cache()
 
-    dfilt.train()
+    dfilt.eval()
 
     img = Variable(torch.FloatTensor(1))
 
@@ -125,6 +125,8 @@ if __name__ == '__main__':
                     time_sum=time_sum+stop-start
                     counter=counter+1
                     # npimage=(z_fake[0]*255).squeeze(0).cpu().detach().numpy().astype(np.uint8)
+                    # image = abs(z_fake[0][0]/z_fake[0][0].max()-img[0][0])*m_depth
+                    # npimage=image.cpu().detach().numpy().astype(np.uint16)
                     npimage=(z_fake[0]*m_depth).squeeze(0).cpu().detach().numpy().astype(np.uint16)
                     # npimage= np.moveaxis(npimage,0,-1)
                     cv2.imwrite(outpath, npimage)
