@@ -76,8 +76,8 @@ def parse_args():
                       help='learning rate decay ratio',
                       default=0.1, type=float)
     parser.add_argument('--lt', dest='losst',
-                      help='losstype: DDD, ownBCE, BCE, BCElogits, maskloss, pwloss',
-                      default="DDD", type=str)
+                      help='losstype: DDD, ownBCE, BCE, BCElogits, maskloss, pwloss, l1',
+                      default="l1", type=str)
 
 
 # set training session
@@ -249,7 +249,8 @@ if __name__ == '__main__':
             # z = F.interpolate(z, size=(120,160), mode='nearest')
             optimizer.zero_grad()
             z_fake = dfilt(img)
-
+            if args.losst is 'l1':
+                z[z>0]=1
             loss=criterion(z_fake,z)
             # print(loss)
             loss.backward()
@@ -298,7 +299,8 @@ if __name__ == '__main__':
                 # z = F.interpolate(z, size=(120,160), mode='nearest')
                 
                 z_fake = dfilt(img)
-
+                if args.losst is 'l1':
+                    z[z>0]=1
                 eloss = criterion(z_fake, z)
                 eval_loss += eloss                
                 
