@@ -1,20 +1,18 @@
-# %%
-# %%
-# from dataset.dataloader import DepthDataset
+from autoencoder import Autoencoder
+from bceloss import CEntropyLoss
 from collections import Counter
 from dataset.nyuv2_dataset import NYUv2Dataset
+from depthdiffloss import DDDDepthDiff
+from maskloss import MaskLoss
 from model_fpn import DFILT
 from model_unet import DFILTUNET
+from pixelwiseloss import PixelWiseOutlierLoss
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
 from torch.autograd import Variable
+from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
 from unet_model import UNet
-from autoencoder import Autoencoder
-from bceloss import CEntropyLoss
-from depthdiffloss import DDDDepthDiff
-from pixelwiseloss import PixelWiseOutlierLoss
-from maskloss import MaskLoss
 import argparse, time
 import matplotlib, cv2
 import matplotlib.pyplot as plt
@@ -24,6 +22,8 @@ import os, sys
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision
+
 matplotlib.use('Agg')
 
 def adjust_learning_rate(optimizer, decay=0.1):
@@ -119,9 +119,23 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def matplotlib_imshow(img, one_channel=False):
+    if one_channel:
+        img = img.mean(dim=0)
+    img = img *255     # unnormalize
+    npimg = img.cpu().detach().numpy()
+    if one_channel:
+        plt.imshow(npimg, cmap="Greys")
+    else:
+        plt.imshow(np.transpose(npimg, (1, 2, 0)))
+
 if __name__ == '__main__':
 
     args = parse_args()
+
+    # Tensorboard
+    writer = SummaryWriter()
+
 
     if args.losst is 'DDD':
         criterion = DDDDepthDiff()
@@ -249,6 +263,10 @@ if __name__ == '__main__':
             # z = F.interpolate(z, size=(120,160), mode='nearest')
             optimizer.zero_grad()
             z_fake = dfilt(img)
+            grid = torchvision.utils.make_grid(z_fake)
+            matplotlib_imshow(grid, one_channel=True)
+            writer.add_image('mask', grid)
+
             if args.losst is 'l1':
                 z[z>0]=1
             loss=criterion(z_fake,z)
@@ -322,3 +340,4 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig("losses.png")
     plt.close()
+    writer.close()
