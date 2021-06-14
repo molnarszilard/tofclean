@@ -133,7 +133,8 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-
+    # Tensorboard
+    writer = SummaryWriter()
 
 
     if args.losst is 'DDD':
@@ -235,8 +236,7 @@ if __name__ == '__main__':
     train_loss_arr = []
     val_loss_arr = []
     for epoch in range(args.start_epoch, args.max_epochs):
-        # Tensorboard
-        writer = SummaryWriter()
+        
         train_loss = 0 
         eval_loss = 0
         # setting to train mode
@@ -264,9 +264,7 @@ if __name__ == '__main__':
             # z = F.interpolate(z, size=(120,160), mode='nearest')
             optimizer.zero_grad()
             z_fake = dfilt(img)
-            grid = torchvision.utils.make_grid(z_fake)
-            matplotlib_imshow(grid, one_channel=True)
-            writer.add_image('mask', grid)
+            
 
             if args.losst is 'l1':
                 z[z>0]=1
@@ -285,6 +283,10 @@ if __name__ == '__main__':
                 print("[epoch %2d][iter %4d] loss: %.4f " \
                                 % (epoch, step, loss))
         # save model
+        grid = torchvision.utils.make_grid(z_fake)
+        matplotlib_imshow(grid, one_channel=True)
+        writer.add_image('mask', grid)
+
         if epoch%1==0 or epoch==args.max_epochs-1:
             save_name = os.path.join(args.output_dir, 'dfilt_{}_{}.pth'.format(args.session, epoch))
             torch.save({'epoch': epoch+1,
@@ -332,7 +334,7 @@ if __name__ == '__main__':
             with open('val.txt', 'a') as f:
                 f.write("[epoch %2d] loss: %.4f\n" \
                             % (epoch, torch.sqrt(eval_loss)))
-        writer.close()
+        
     epochs = range(args.start_epoch, args.max_epochs)
     plt.plot(epochs, train_loss_arr, '-g', label='Training loss')
     plt.plot(epochs, val_loss_arr, 'b', label='Validation loss')
@@ -342,4 +344,4 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig("losses.png")
     plt.close()
-    
+    writer.close()
