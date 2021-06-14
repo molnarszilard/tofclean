@@ -23,7 +23,7 @@ int main(int argc, char **argv)
     // Fill in the cloud data
     pcl::PCDReader reader;
     // Replace the path below with the path where you saved your file
-    reader.read<pcl::PointXYZ>(filename, *cloud);
+    reader.read<pcl::PointXYZ>(file_in, *cloud);
 
     std::cerr << "Cloud before filtering: " << std::endl;
     std::cerr << *cloud << std::endl;
