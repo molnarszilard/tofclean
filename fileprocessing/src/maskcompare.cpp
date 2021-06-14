@@ -33,7 +33,10 @@ int main(int argc, char **argv)
     // cv::resize(gt, gt, cv::Size(), 0.25, 0.25);
     cv::Mat pred = cv::imread(file_pred, cv::IMREAD_GRAYSCALE);
     cv::Mat output = cv::Mat::zeros(gt.rows, gt.cols, CV_8UC3);
-
+    int red=0;
+    int blue=0;
+    int green=0;
+    int black=0;
     for (int i = 0; i < gt.rows; i++)
     {
         for (int j = 0; j < gt.cols; j++)
@@ -45,25 +48,30 @@ int main(int argc, char **argv)
             output.at<cv::Vec3b>(i, j)[2] = 0;
             if (d > 0 && m > 0)
             {
-                output.at<cv::Vec3b>(i, j)[1] = 255;
+                output.at<cv::Vec3b>(i, j)[1] = 255; //green
+                green++;
             }
             else
             {
                 if (d > 0 && m == 0)
                 {
-                    output.at<cv::Vec3b>(i, j)[0] = 255;
+                    output.at<cv::Vec3b>(i, j)[0] = 255; //blue
+                    blue++;
                 }
                 else
                 {
                     if (d == 0 && m > 0)
                     {
-                        output.at<cv::Vec3b>(i, j)[2] = 255;
+                        output.at<cv::Vec3b>(i, j)[2] = 255; //red
+                        red++;
                     }
                 }
             }
         }
     }
+    black = gt.rows*gt.cols-blue-red-green;
     cv::imwrite(file_out, output);
+    std::cout<<"Green: "<<green<<", Black: "<<black<<", Red: "<<red<<", Blue: "<<blue<<std::endl;
 
     return 0;
 }

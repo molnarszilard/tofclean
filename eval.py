@@ -135,8 +135,9 @@ if __name__ == '__main__':
                     continue
             print('Predicting '+str(counter)+' images took ', time_sum/counter)  
         else:
-            print("Predicting for:"+input_image_path)
-            depth = cv2.imread(input_image_path,cv2.IMREAD_UNCHANGED).astype(np.float32)
+            time_sum = 0
+            print("Predicting for:"+args.input_image_path)
+            depth = cv2.imread(args.input_image_path,cv2.IMREAD_UNCHANGED).astype(np.float32)
             if len(depth.shape) < 3:
                 print("Got 1 channel depth images, creating 3 channel depth images")
                 combine_depth = np.empty((depth.shape[0],depth.shape[1], 3))
@@ -146,14 +147,17 @@ if __name__ == '__main__':
                 depth = combine_depth
             depth2 = np.moveaxis(depth,-1,0)
             img = torch.from_numpy(depth2).float().unsqueeze(0).cuda()
+            # img = F.interpolate(img, size=(64,64), mode='nearest')
             start = timeit.default_timer()
             m_depth=torch.max(img)
             img=img/m_depth                 
             z_fake=dfilt(img)
             stop = timeit.default_timer()
             time_sum=time_sum+stop-start
-            counter=counter+1
-            save_path=path[:-4]
-            npimage=(z_fake[0]*m_depth).squeeze(0).cpu().detach().numpy().astype(np.uint16)
-            cv2.imwrite(save_path +'_pred.png', npimage)
+            npimage=(z_fake[0]*255).squeeze(0).cpu().detach().numpy().astype(np.uint8)
+            # image = abs(z_fake[0][0]/z_fake[0][0].max()-img[0][0])*m_depth
+            # npimage=image.cpu().detach().numpy().astype(np.uint16)
+            # npimage=((z_fake[0]-img[0,0])*m_depth).squeeze(0).cpu().detach().numpy().astype(np.uint16)
+            # npimage= np.moveaxis(npimage,0,-1)
+            cv2.imwrite(args.input_image_path, npimage)
     

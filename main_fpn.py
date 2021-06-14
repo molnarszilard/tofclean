@@ -133,8 +133,7 @@ if __name__ == '__main__':
 
     args = parse_args()
 
-    # Tensorboard
-    writer = SummaryWriter()
+
 
 
     if args.losst is 'DDD':
@@ -236,6 +235,8 @@ if __name__ == '__main__':
     train_loss_arr = []
     val_loss_arr = []
     for epoch in range(args.start_epoch, args.max_epochs):
+        # Tensorboard
+        writer = SummaryWriter()
         train_loss = 0 
         eval_loss = 0
         # setting to train mode
@@ -288,7 +289,7 @@ if __name__ == '__main__':
             save_name = os.path.join(args.output_dir, 'dfilt_{}_{}.pth'.format(args.session, epoch))
             torch.save({'epoch': epoch+1,
                     'model': dfilt.state_dict(), 
-#                     'optimizer': optimizer.state_dict(),
+                    #'optimizer': optimizer.state_dict(),
                    },
                    save_name)
 
@@ -331,6 +332,7 @@ if __name__ == '__main__':
             with open('val.txt', 'a') as f:
                 f.write("[epoch %2d] loss: %.4f\n" \
                             % (epoch, torch.sqrt(eval_loss)))
+        writer.close()
     epochs = range(args.start_epoch, args.max_epochs)
     plt.plot(epochs, train_loss_arr, '-g', label='Training loss')
     plt.plot(epochs, val_loss_arr, 'b', label='Validation loss')
@@ -340,4 +342,4 @@ if __name__ == '__main__':
     plt.legend()
     plt.savefig("losses.png")
     plt.close()
-    writer.close()
+    
