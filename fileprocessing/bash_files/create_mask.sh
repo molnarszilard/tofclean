@@ -1,6 +1,6 @@
 #!bin/bash
 builddir=$PWD'/../build/'
-ddir=$PWD'/../../dataset/evaluation/depth/'
+ddir=$PWD'/../../dataset/evaluation/depthgt/'
 mdir=$PWD'/../../dataset/evaluation/maskgt/'
 
 if [[ ! -z "$1" ]] 
