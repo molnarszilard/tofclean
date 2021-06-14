@@ -282,11 +282,12 @@ if __name__ == '__main__':
                 #                 % (epoch, step, loss, depth_loss, grad_loss, normal_loss))
                 print("[epoch %2d][iter %4d] loss: %.4f " \
                                 % (epoch, step, loss))
-        # save model
+        
+        #show tensorboard image
         grid = torchvision.utils.make_grid(z_fake)
         matplotlib_imshow(grid, one_channel=True)
         writer.add_image('mask', grid)
-
+        # save model
         if epoch%1==0 or epoch==args.max_epochs-1:
             save_name = os.path.join(args.output_dir, 'dfilt_{}_{}.pth'.format(args.session, epoch))
             torch.save({'epoch': epoch+1,
