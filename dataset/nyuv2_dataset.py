@@ -12,6 +12,7 @@ import torch, time, os
 import torch.utils.data as data
 
 class NYUv2Dataset(data.Dataset):
+    # def __init__(self, root='/media/rambo/ssd2/Szilard/toffilter_nyu//dataset/', seed=None, train=True):
     def __init__(self, root='./dataset/', seed=None, train=True):
     # def __init__(self, root='./dataset_anime/', seed=None, train=True):
         
@@ -61,8 +62,8 @@ class NYUv2Dataset(data.Dataset):
             combine_depth[:,:,1] = depth_input
             combine_depth[:,:,2] = depth_input
             depth_input = combine_depth
-        # depthgt = cv2.imread(path.replace('noisy', 'gt'),cv2.IMREAD_UNCHANGED ).astype(np.float32)
-        depthgt = cv2.imread(path,cv2.IMREAD_UNCHANGED ).astype(np.float32)
+        depthgt = cv2.imread(path.replace('noisy', 'gt'),cv2.IMREAD_UNCHANGED ).astype(np.float32)
+        # depthgt = cv2.imread(path,cv2.IMREAD_UNCHANGED ).astype(np.float32)
         depth_input_mod = np.moveaxis(depth_input,-1,0)
         # depthgt2 = np.moveaxis(depthgt,-1,0)
         depthgt2=np.expand_dims(depthgt, axis=0)
