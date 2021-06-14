@@ -3,9 +3,9 @@ bashdir=$PWD'/fileprocessing/bash_files/'
 builddir=$PWD'/fileprocessing/build/'
 evaldir=$PWD'/dataset/evaluation/'
 
-# rm -rf $evaldir'depth_pred/'
-# mkdir $evaldir'depth_pred'
-# python eval.py
+rm -rf $evaldir'depth_pred/'
+mkdir $evaldir'depth_pred'
+python eval.py
 
 cd $evaldir
 
@@ -22,7 +22,7 @@ mkdir mask_diff/
 # mkdir pcd_pred_mask/
 
 cd $bashdir
-# python rename.py --dir=$evaldir'depth_pred/' --ext=.png
+python rename.py --dir=$evaldir'depth_pred/' --ext=.png
 # bash depth2pcd.sh $evaldir'depth_pred/' $evaldir'pcd_pred/'
 # python rename.py --dir=$evaldir'pcd_pred/' --ext=.pcd
 # bash create_mask.sh $evaldir'depth_pred/' $evaldir'mask/'
