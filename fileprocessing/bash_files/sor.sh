@@ -1,7 +1,8 @@
 #!bin/bash
+#!bin/bash
 builddir=$PWD'/../build/'
-input_dir=$PWD'/../../dataset/evaluation/pcd/'
-output_dir=$PWD'/../../dataset/evaluation/pcd_filtered/'
+input_dir=/media/rambo/ssd2/Szilard/nyu_v2_filter/dataset_plane/pcd_vox/
+output_dir=/media/rambo/ssd2/Szilard/nyu_v2_filter/dataset_plane/pcd_vox/
 
 if [[ ! -z "$1" ]] 
 then 
