@@ -1,0 +1,38 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+
+project(fileprocessing)
+
+find_package(PCL 1.2 REQUIRED)
+find_package(OpenCV REQUIRED)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include_directories(${PCL_INCLUDE_DIRS})
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+add_executable (addnoise2rgb src/addnoise2rgb.cpp)
+add_executable (create_mask src/create_mask.cpp)
+add_executable (depth2pcd src/depth2pcd.cpp)
+add_executable (depth3 src/depth3.cpp)
+add_executable (depthmask2pcd src/depthmask2pcd.cpp)
+add_executable (maskcompare src/maskcompare.cpp)
+add_executable (pcd2depth src/pcd2depth.cpp)
+add_executable (pw_depthcompare src/pw_depthcompare.cpp)
+add_executable (pw_pcdcompare src/pw_pcdcompare.cpp)
+add_executable (sor src/sor.cpp)
+add_executable (voxel_filter src/voxel_filter.cpp)
+
+target_link_libraries (addnoise2rgb ${OpenCV_LIBS})
+target_link_libraries (create_mask ${OpenCV_LIBS})
+target_link_libraries (depth2pcd ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries (depthmask2pcd ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries (maskcompare ${OpenCV_LIBS})
+target_link_libraries (pcd2depth ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries (pw_depthcompare ${OpenCV_LIBS})
+target_link_libraries (pw_pcdcompare ${OpenCV_LIBS} ${PCL_LIBRARIES})
+target_link_libraries (sor ${PCL_LIBRARIES})
+target_link_libraries (voxel_filter ${PCL_LIBRARIES})

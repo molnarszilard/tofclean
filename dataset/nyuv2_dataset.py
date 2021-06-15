@@ -12,8 +12,8 @@ import torch, time, os
 import torch.utils.data as data
 
 class NYUv2Dataset(data.Dataset):
-    # def __init__(self, root='/media/rambo/ssd2/Szilard/toffilter_nyu//dataset/', seed=None, train=True):
-    def __init__(self, root='./dataset/', seed=None, train=True):
+    def __init__(self, root='/media/rambo/ssd2/Szilard/toffilter_nyu/dataset/', seed=None, train=True):
+    # def __init__(self, root='./dataset/', seed=None, train=True):
     # def __init__(self, root='./dataset_anime/', seed=None, train=True):
         
         np.random.seed(seed)

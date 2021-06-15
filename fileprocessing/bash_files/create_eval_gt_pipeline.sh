@@ -1,43 +1,41 @@
 #!bin/bash
 bashdir=$PWD
 builddir=$PWD'/../build/'
-evaldir=$PWD'/../../dataset/evaluation/'
-cd $1
+work_dir=$PWD'/../../dataset/evaluation/'
+filter_type='sor'
+if [[ ! -z "$1" ]] 
+then 
+    work_dir=$1
+    if [[ ! -z "$2" ]] 
+    then 
+        filter_type=$2
+    fi
+fi
+cd $work_dir
 mkdir pcd
 mkdir pcd_filtered
-mkdir depth_filtered
-mkdir evaluation
-mkdir evaluation/depth3/
-mkdir evaluation/depthgt/
-mkdir evaluation/depth/
-mkdir evaluation/depth_pred/
-mkdir evaluation/pcdgt
-mkdir evaluation/pcd
-cp depth/* evaluation/depth/
+mkdir depth3/
+mkdir depthgt/
 cd $bashdir
-python3 rename.py --dir=$1evaluation/depth/ --ext=.png
-bash depth2pcd.sh $1depth/ $1pcd/
-case $2 in
+python3 rename.py --dir=$work_dir'depth/' --ext=.png
+bash depth2pcd.sh $work_dir'depth/' $work_dir'pcd/'
+case $filter_type in
     sor)
-        bash sor.sh $1pcd/ $1pcd_filtered/
+        bash sor.sh $work_dir'pcd/' $work_dir'pcd_filtered/'
         ;;
     voxel)
-        bash voxel_filter.sh $1pcd/ $1pcd_filtered/
+        bash voxel_filter.sh $work_dir'pcd/' $work_dir'pcd_filtered/'
         ;;
     *)
-        bash sor.sh $1pcd/ $1pcd_filtered/
+        bash sor.sh $work_dir'pcd/' $work_dir'pcd_filtered/'
         ;;
 esac
-bash pcd2depth.sh $1pcd_filtered/ $1depth_filtered/
+bash pcd2depth.sh $work_dir'pcd_filtered/' $work_dir'depthgt/'
 
-python3 rename.py --dir=$1depth_filtered/ --ext=.png
-python3 rename.py --dir=$1pcd_filtered/ --ext=.pcd
-python3 rename.py --dir=$1pcd/ --ext=.pcd
+python3 rename.py --dir=$work_dir'depthgt/' --ext=.png
+python3 rename.py --dir=$work_dir'pcd_filtered/' --ext=.pcd
+python3 rename.py --dir=$work_dir'pcd/' --ext=.pcd
 
-bash depth3.sh $1evaluation/depth/ $1evaluation/depth3/
-python3 rename.py --dir=$1evaluation/depth3/ --ext=.png
-
-cd $1
-cp depth_filtered/* evaluation/depthgt/
-cp pcd_filtered/* evaluation/pcdgt/
-cp pcd/* evaluation/pcd/
+bash depth3.sh $work_dir'depth/' $work_dir'depth3/'
+python3 rename.py --dir=$work_dir'depth3/' --ext=.png
+bash create_mask.sh $work_dir'depthgt/' $work_dir'maskgt/'
