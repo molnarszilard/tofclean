@@ -86,7 +86,10 @@ class Autoencoder(nn.Module):
         d7 = F.relu(self.dec7(d6))+e0
         if debug:
             print(d7.shape)
-        x = self.out(d7)
+        # x = F.relu(self.out(d7))
+        x = torch.sigmoid(self.out(d7))
+        # maxx=x.max()
+        # x=x/maxx
         return x
 net = Autoencoder()
 print(net)

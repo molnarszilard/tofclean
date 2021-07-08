@@ -1,6 +1,6 @@
 #!bin/bash
-bashdir=$PWD'/fileprocessing/bash_files/'
-builddir=$PWD'/fileprocessing/build/'
+bashdir='/home/szilard/projects/fileprocessing/bash_files/'
+builddir='/home/szilard/projects/fileprocessing/build/'
 evaldir=$PWD'/dataset/evaluation/'
 
 rm -rf $evaldir'depth_pred/'

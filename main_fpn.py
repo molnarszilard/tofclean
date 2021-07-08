@@ -9,6 +9,7 @@ from model_unet import DFILTUNET
 from pixelwiseloss import PixelWiseOutlierLoss
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import log_loss
+from stdevloss import StDevLoss
 from torch.autograd import Variable
 from torch.utils.tensorboard import SummaryWriter
 from torchvision import transforms
@@ -76,8 +77,8 @@ def parse_args():
                       help='learning rate decay ratio',
                       default=0.1, type=float)
     parser.add_argument('--lt', dest='losst',
-                      help='losstype: DDD, ownBCE, BCE, BCElogits, maskloss, pwloss, l1',
-                      default="l1", type=str)
+                      help='losstype: DDD, ownBCE, BCE, BCElogits, maskloss, pwloss, l1, stdev',
+                      default="stdev", type=str)
 
 
 # set training session
@@ -100,7 +101,7 @@ def parse_args():
                       default=1, type=int)
     parser.add_argument('--checkepoch', dest='checkepoch',
                       help='checkepoch to load model',
-                      default=8, type=int)
+                      default=2, type=int)
     parser.add_argument('--checkpoint', dest='checkpoint',
                       help='checkpoint to load model',
                       default=0, type=int)
@@ -153,6 +154,8 @@ if __name__ == '__main__':
         criterion = nn.MSELoss()
     if args.losst is 'l1':
         criterion = nn.L1Loss()
+    if args.losst is 'stdev':
+        criterion = StDevLoss()
 
     if torch.cuda.is_available() and not args.cuda:
         print("WARNING: You might want to run with --cuda")
@@ -266,7 +269,7 @@ if __name__ == '__main__':
             z_fake = dfilt(img)
             
 
-            if args.losst is 'l1':
+            if args.losst is 'l1' or args.losst is 'BCE':
                 z[z>0]=1
             loss=criterion(z_fake,z)
             # print(loss)
